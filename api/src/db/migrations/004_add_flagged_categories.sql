@@ -1,0 +1,2 @@
+ALTER TABLE jobs
+  ADD COLUMN IF NOT EXISTS flagged_categories JSONB DEFAULT '[]';

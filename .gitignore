@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Env files (never commit real secrets)
+.env
+.env.local
+api/.env
+worker/.env
+web/.env
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Docker volumes (if mapped to local folders)
+postgres_data/
+redis_data/
+
+# Uploaded files (local dev storage)
+uploads/
+
+# Test coverage
+coverage/
