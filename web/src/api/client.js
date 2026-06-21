@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "https://playstation-points-concert-threaded.trycloudflare.com",
+  baseURL: import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/api`
+    : "https://playstation-points-concert-threaded.trycloudflare.com/api",
 });
 
 client.interceptors.request.use((config) => {
