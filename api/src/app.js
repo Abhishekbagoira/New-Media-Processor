@@ -17,7 +17,7 @@ app.use(cors({
   origin: [
     "http://localhost:3000",
     "http://localhost:5173",
-    "https://media-pipeline-roan.vercel.app"
+    "https://new-media-processor.vercel.app"
   ],
   credentials: true
 }));
