@@ -1,0 +1,40 @@
+name: media-pipeline
+services:
+- name: api
+  github:
+    repo: AbhishekBagotra/New-Media-Processor
+    branch: main
+  source_dir: api
+  build_command: npm install --omit=dev
+  run_command: node src/server.js
+  http_port: 4000
+  envs:
+  - key: PORT
+    value: "4000"
+  - key: NODE_ENV
+    value: production
+
+- name: worker
+  github:
+    repo: AbhishekBagotra/New-Media-Processor
+    branch: main
+  source_dir: worker
+  build_command: npm install --omit=dev
+  run_command: node src/index.js
+
+- name: ml
+  github:
+    repo: AbhishekBagotra/New-Media-Processor
+    branch: main
+  source_dir: ml
+  build_command: pip install -r requirements.txt
+  run_command: python app.py
+  http_port: 5000
+
+databases:
+- engine: PG
+  name: postgres
+  version: "16"
+- engine: REDIS
+  name: redis
+  version: "7"
