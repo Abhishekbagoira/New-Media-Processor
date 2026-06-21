@@ -313,7 +313,7 @@ npm test
 
 ### Frontend → Vercel
 
-1. Import repo on [vercel.com](https://vercel.com)
+1. Import repo on [[vercel.com](https://vercel.com)](https://vercel.com/abhishekbagoria/new-media-processor)
 2. Set **Root Directory** to `web`
 3. Add env var: `VITE_API_URL=https://your-api.onrender.com`
 
