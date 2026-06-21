@@ -3,15 +3,15 @@ import fs from "fs";
 
 const ML_URL = process.env.ML_SERVICE_URL ?? "http://ml:5000";
 
-// Likelihoods that count as unsafe — matches Google Vision SafeSearch spec
-const UNSAFE_LIKELIHOODS = [ "LIKELY", "VERY_LIKELY"];
+const UNSAFE_LIKELIHOODS = ["POSSIBLE", "LIKELY", "VERY_LIKELY"];
 
-export const runSafeSearch = async (filePath) => {
+export const runSafeSearch = async (localPath) => {
   logger.info("[safety] starting");
 
+  // localPath is always a local file — downloaded by processJob
+  const blob = new Blob([fs.readFileSync(localPath)]);
   const formData = new FormData();
-  const blob = new Blob([fs.readFileSync(filePath)]);
-  formData.append("image", blob, "image.png");
+  formData.append("image", blob, "image.jpg");
 
   const response = await fetch(`${ML_URL}/safety`, {
     method: "POST",
@@ -26,7 +26,6 @@ export const runSafeSearch = async (filePath) => {
   const data = await response.json();
   const details = data.details;
 
-  // Find which specific categories are unsafe
   const flaggedCategories = Object.entries(details)
     .filter(([, likelihood]) => UNSAFE_LIKELIHOODS.includes(likelihood))
     .map(([category]) => category);
@@ -37,9 +36,5 @@ export const runSafeSearch = async (filePath) => {
     `[safety] flagged=${flagged} categories=${flaggedCategories.join(", ") || "none"}`,
   );
 
-  return {
-    flagged,
-    flaggedCategories,
-    details,
-  };
+  return { flagged, flaggedCategories, details };
 };

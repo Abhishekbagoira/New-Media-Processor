@@ -85,7 +85,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const { flagged } = req.query;
-    let query = `SELECT id, status, original_filename, caption, labels, flagged,
+    let query = `SELECT id, status, original_filename,file_path, caption, labels, flagged,
        error_message, retry_count, created_at, updated_at
        FROM jobs
        WHERE user_id = $1`;

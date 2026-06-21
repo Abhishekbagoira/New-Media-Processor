@@ -3,12 +3,13 @@ import fs from "fs";
 
 const ML_URL = process.env.ML_SERVICE_URL ?? "http://ml:5000";
 
-export const runLabelDetection = async (filePath) => {
+export const runLabelDetection = async (localPath) => {
   logger.info("[labels] starting");
 
+  // localPath is always a local file — downloaded by processJob
+  const blob = new Blob([fs.readFileSync(localPath)]);
   const formData = new FormData();
-  const blob = new Blob([fs.readFileSync(filePath)]);
-  formData.append("image", blob, "image.png");
+  formData.append("image", blob, "image.jpg");
 
   const response = await fetch(`${ML_URL}/labels`, {
     method: "POST",
@@ -21,6 +22,6 @@ export const runLabelDetection = async (filePath) => {
   }
 
   const data = await response.json();
-  logger.info(`[labels] result: ${data.labels.join(", ")}`);
+  logger.info(`[labels] result: ${JSON.stringify(data.labels)}`);
   return data.labels;
 };

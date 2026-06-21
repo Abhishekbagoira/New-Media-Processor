@@ -3,12 +3,13 @@ import fs from "fs";
 
 const ML_URL = process.env.ML_SERVICE_URL ?? "http://ml:5000";
 
-export const runCaptioning = async (filePath) => {
+export const runCaptioning = async (localPath) => {
   logger.info("[caption] starting");
 
+  // localPath is always a local file — downloaded by processJob
+  const blob = new Blob([fs.readFileSync(localPath)]);
   const formData = new FormData();
-  const blob = new Blob([fs.readFileSync(filePath)]);
-  formData.append("image", blob, "image.png");
+  formData.append("image", blob, "image.jpg");
 
   const response = await fetch(`${ML_URL}/caption`, {
     method: "POST",
@@ -24,4 +25,3 @@ export const runCaptioning = async (filePath) => {
   logger.info(`[caption] result: "${data.caption}"`);
   return data.caption;
 };
-

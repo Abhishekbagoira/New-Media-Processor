@@ -45,26 +45,34 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
+  # FIX 1: ml is now a proper sibling service (correct indentation)
   ml:
     build:
       context: ./ml
+    container_name: media-pipeline-ml
     restart: unless-stopped
+    environment:
+      # FIX 2: pulled from root .env via Compose interpolation
+      GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
 
   worker:
     build:
       context: ./worker
+    container_name: media-pipeline-worker
     restart: unless-stopped
     depends_on:
-      - postgres
-      - redis
-      - ml
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ml:
+        condition: service_started
     environment:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://redis:6379
-      HF_API_KEY: ${HF_API_KEY}
-      HF_MODEL: ${HF_MODEL}
-      GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
       ML_SERVICE_URL: http://ml:5000
+      GOOGLE_VISION_API_KEY: ${GOOGLE_VISION_API_KEY}
     volumes:
       - uploads_data:/app/uploads
 
