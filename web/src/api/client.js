@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const client = axios.create({
-  baseURL: "new-media-processor-production.up.railway.app",
+  baseURL: import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, "")}/api`
+    : "new-media-processor-production.up.railway.app",
 });
 
 client.interceptors.request.use((config) => {
